@@ -1,0 +1,39 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and push Docker image
+      run: |
+        docker build -f .devcontainer/dev/Dockerfile -t autogen_dev-srv_img .
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Kubernetes
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'latest'
+
+    - name: Get AKS credentials
+      run: az aks get-credentials --resource-group {{ACR_RESGRP}} --name myAKSCluster
+
+    - name: Deploy to AKS
+      run: |
+        kubectl create deployment dev --image=.devcontainer/dev/Dockerfile
+        kubectl expose deployment dev --type=LoadBalancer --port=80 --target-port=80
