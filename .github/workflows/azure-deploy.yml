@@ -13,9 +13,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Login to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_REG }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
     - name: Build and push Docker image
       run: |
-        docker build -f .devcontainer/dev/Dockerfile -t autogen_dev-srv_img .
+        docker build -f .devcontainer/studio/Dockerfile -t autogen_studio-srv_img .
 
   deploy:
     runs-on: ubuntu-latest
@@ -31,9 +38,9 @@ jobs:
         version: 'latest'
 
     - name: Get AKS credentials
-      run: az aks get-credentials --resource-group {{ACR_RESGRP}} --name myAKSCluster
+      run: az aks get-credentials --resource-group {{ACR_RESGRP}} --name {{ACR_AKS}}
 
     - name: Deploy to AKS
       run: |
-        kubectl create deployment dev --image=.devcontainer/dev/Dockerfile
+        kubectl create deployment dev --image=.devcontainer/studio/Dockerfile
         kubectl expose deployment dev --type=LoadBalancer --port=80 --target-port=80
