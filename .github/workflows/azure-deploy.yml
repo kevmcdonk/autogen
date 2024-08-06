@@ -43,7 +43,7 @@ jobs:
         version: 'latest'
 
     - name: Get AKS credentials
-      run: az aks get-credentials --resource-group ${{ACR_RESGRP}} --name ${{ACR_AKS}}
+      run: az aks get-credentials --resource-group ${{ env.ACR_RESGRP}} --name ${{ env.ACR_AKS}}
 
     - name: Deploy to AKS
       run: |
