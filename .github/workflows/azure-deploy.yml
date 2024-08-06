@@ -50,5 +50,6 @@ jobs:
 
     - name: Deploy to AKS
       run: |
-        kubectl create deployment mcd79agstudio --image=${{ secrets.ACR_REG }}.azurecr.io/autogen_studio-srv_img
+        kubectl set image deployment/mcd79agstudio my-container=${{ secrets.ACR_REG }}.azurecr.io/autogen_studio-srv_img
+        kubectl apply -f k8s/deployment.yaml
         kubectl expose deployment mcd79agstudio --type=LoadBalancer --port=80 --target-port=80
