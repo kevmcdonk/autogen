@@ -23,7 +23,7 @@ jobs:
     - name: Build and push Docker image
       run: |
         docker build -f .devcontainer/studio/Dockerfile -t autogen_studio-srv_img .
-        docker tag autogen_studio-srv_img:V1 ${{ secrets.ACR_REG }}.azurecr.io/autogen_studio-srv_img:V1
+        docker tag autogen_studio-srv_img ${{ secrets.ACR_REG }}.azurecr.io/autogen_studio-srv_img
         docker push  ${{ secrets.ACR_REG }}.azurecr.io/autogen_studio-srv_img
 
 
