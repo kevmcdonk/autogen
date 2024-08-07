@@ -25,3 +25,4 @@ ENV DEBIAN_FRONTEND=dialog
 RUN npm install --global yarn
 RUN pip install --upgrade pip
 RUN pip install pydoc-markdown
+RUN pip install autogenstudio
