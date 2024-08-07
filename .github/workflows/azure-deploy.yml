@@ -50,7 +50,7 @@ jobs:
       with:
         resource-group: ${{ vars.ACR_RESGRP }}
         dns-name-label: ${{ vars.ACR_RESGRP }}${{ github.run_number }}
-        image: ${{ secrets.ACR_REG }}/sampleapp:${{ github.sha }}
+        image: ${{ secrets.ACR_REG }}/autogen_studio-srv_img:${{ github.sha }}
         registry-login-server: ${{ secrets.ACR_REG }}
         registry-username: ${{ secrets.ACR_USERNAME }}
         registry-password: ${{ secrets.ACR_PASSWORD }}
