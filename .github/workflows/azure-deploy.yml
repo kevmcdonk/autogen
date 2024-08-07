@@ -44,11 +44,16 @@ jobs:
       uses: azure/setup-kubectl@v1
       with:
         version: 'latest'
-
-    - name: Get AKS credentials
-      run: az aks get-credentials --resource-group ${{ vars.ACR_RESGRP}} --name ${{ vars.ACR_AKS}}
-
-    - name: Deploy to AKS
-      run: |
-        kubectl set image deployment/mcd79agstudio autogen-studio-srv-img-fp7d9=${{ secrets.ACR_REG }}.azurecr.io/autogen_studio-srv_img
-        kubectl expose deployment mcd79agstudio --type=LoadBalancer --port=80 --target-port=80
+        
+    - name: 'Deploy to Azure Container Instances'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: ${{ vars.ACR_RESGRP }}
+        dns-name-label: ${{ vars.ACR_RESGRP }}${{ github.run_number }}
+        image: ${{ secrets.ACR_REG }}/sampleapp:${{ github.sha }}
+        registry-login-server: ${{ secrets.ACR_REG }}
+        registry-username: ${{ secrets.ACR_USERNAME }}
+        registry-password: ${{ secrets.ACR_PASSWORD }}
+        name: mcd79agstudio
+        location: 'west europe'
+  
